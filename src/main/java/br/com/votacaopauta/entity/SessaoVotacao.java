@@ -1,24 +1,35 @@
 package br.com.votacaopauta.entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-public class SessaoVotacao extends PanacheEntity {
+public class SessaoVotacao implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "pauta")
     private Pauta pauta;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "abertura")
-    private Date abertura;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime abertura;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "encerramento")
-    private Date encerramento;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime encerramento;
 
     public Pauta getPauta() {
         return pauta;
@@ -28,19 +39,27 @@ public class SessaoVotacao extends PanacheEntity {
         this.pauta = pauta;
     }
 
-    public Date getAbertura() {
+    public LocalDateTime getAbertura() {
         return abertura;
     }
 
-    public void setAbertura(Date abertura) {
+    public void setAbertura(LocalDateTime abertura) {
         this.abertura = abertura;
     }
 
-    public Date getEncerramento() {
+    public LocalDateTime getEncerramento() {
         return encerramento;
     }
 
-    public void setEncerramento(Date encerramento) {
+    public void setEncerramento(LocalDateTime encerramento) {
         this.encerramento = encerramento;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

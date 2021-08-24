@@ -1,10 +1,15 @@
 package br.com.votacaopauta.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.persistence.*;
 @Entity
-public class Voto extends PanacheEntity {
+public class Voto extends PanacheEntityBase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "pauta")
@@ -27,5 +32,13 @@ public class Voto extends PanacheEntity {
 
     public void setVoto(boolean voto) {
         this.voto = voto;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
