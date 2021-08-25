@@ -6,12 +6,12 @@ import br.com.votacaopauta.repository.SessaoVotacaoRepository;
 import br.com.votacaopauta.repository.VotoRepository;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import java.time.LocalDateTime;
+
+import static java.lang.Thread.sleep;
 
 @ApplicationScoped
 public class SessaoVotacaoService {
@@ -55,7 +55,7 @@ class Timer extends Thread {
     @Override
     public void run() {
         try {
-            Thread.sleep(time);
+            sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ class TimerRunner extends Thread {
     public void run() {
         try {
             while(true) {
-                Thread.sleep(500);
+                sleep(500);
                 if(!thread.isAlive()) {
                     fecharSessao(sessaoVotacao);
                     System.out.println("Sessao Encerada...");

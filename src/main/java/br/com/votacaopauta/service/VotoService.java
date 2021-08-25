@@ -1,6 +1,10 @@
 package br.com.votacaopauta.service;
 
-import br.com.votacaopauta.entity.*;
+import br.com.votacaopauta.dto.StatusDTO;
+import br.com.votacaopauta.entity.Associado;
+import br.com.votacaopauta.entity.AssociadoVotacoes;
+import br.com.votacaopauta.entity.Pauta;
+import br.com.votacaopauta.entity.Voto;
 import br.com.votacaopauta.enums.StatusEnum;
 import br.com.votacaopauta.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +19,7 @@ import javax.ws.rs.core.Response;
 public class VotoService {
 
     @RestClient
-    AssociadoService associadoService;
+    ApiCPFConsumer apiCPFConsumer;
 
     @Inject
     AssociadoRepository associadoRepository;
@@ -33,15 +37,15 @@ public class VotoService {
     SessaoVotacaoRepository sessaoVotacaoRepository;
 
     private StatusEnum verificaAssociado(String cpfAssociado){
-        String statusStr = associadoService.getStatusCPF(cpfAssociado);
-        Status status;
+        String statusStr = apiCPFConsumer.getStatusCPF(cpfAssociado);
+        StatusDTO statusDTO;
         try {
-            status = new ObjectMapper().readValue(statusStr, Status.class);
+            statusDTO = new ObjectMapper().readValue(statusStr, StatusDTO.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return StatusEnum.ERROR_ON_VOTE;
         }
-        return StatusEnum.valueOf(status.getStatus());
+        return StatusEnum.valueOf(statusDTO.getStatus());
     }
 
     private Associado cadastraAssociado(String cpfAssociado) {
@@ -53,6 +57,12 @@ public class VotoService {
     }
 
     public Response computarVoto(Long idPauta, String cpfAssociado, String votoValue) {
+        boolean sessaoAindaEstaAberta = sessaoVotacaoRepository.find("pauta.id=?1 and encerramento = null", idPauta).count() == 1;
+
+        if(!sessaoAindaEstaAberta) {
+            return Response.ok().entity(StatusEnum.SESSION_CLOSED).build();
+        }
+
         StatusEnum statusVerificacao = verificaAssociado(cpfAssociado);
         if (StatusEnum.ABLE_TO_VOTE.getStatus().equals(statusVerificacao.getStatus())) {
             Associado associado = associadoRepository.find("cpf", cpfAssociado).firstResult();
@@ -63,9 +73,8 @@ public class VotoService {
 
             Pauta pauta = pautaRepository.findById(idPauta);
             Boolean associadoNaoVotouNessaPauta = associadoVotacaoRepository.find("associado.cpf=?1 and pauta.id=?2",cpfAssociado,idPauta).count() == 0;
-            Boolean sessaoAindaEstaAberta = sessaoVotacaoRepository.find("pauta.id=?1 and encerramento = null", idPauta).count() == 1;
 
-            if (associadoNaoVotouNessaPauta && sessaoAindaEstaAberta) {
+            if (associadoNaoVotouNessaPauta) {
                 AssociadoVotacoes associadoVotacoes = new AssociadoVotacoes();
                 associadoVotacoes.setAssociado(associado);
                 associadoVotacoes.setPauta(pauta);

@@ -4,13 +4,11 @@ import br.com.votacaopauta.entity.Pauta;
 import br.com.votacaopauta.repository.PautaRepository;
 import br.com.votacaopauta.service.SessaoVotacaoService;
 
-import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 
 @Path("/pauta")
@@ -42,7 +40,9 @@ public class PautaResource {
     public Response create(Pauta pauta, Long tempoSessao) {
         pautaRepository.persist(pauta);
         sessaoVotacaoService.init(pauta,tempoSessao);
-        return Response.created(URI.create("/pauta/"+pauta.getId())).build();
+        return Response.ok().entity(get(pauta.getId())).build();
     }
+
+
 
 }

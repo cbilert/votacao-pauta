@@ -1,8 +1,8 @@
-package br.com.votacaopauta.entity;
+package br.com.votacaopauta.dto;
 
 import java.io.Serializable;
 
-public class Status implements Serializable {
+public class StatusDTO implements Serializable {
     String status;
 
     public String getStatus() {
