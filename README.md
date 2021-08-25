@@ -21,7 +21,7 @@ votar;
 ## TODO
  - Integração com mensageria e filas
  - Teste de performance
- - Versionamento
+ - Versionamento de API
  - Implementar Testes unitários.
 ***
 ***
