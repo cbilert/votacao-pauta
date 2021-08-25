@@ -11,8 +11,10 @@ import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import java.time.LocalDateTime;
 
-import static java.lang.Thread.sleep;
-
+/**
+ * @author Cristian
+ * @apiNote serviço que realiza a abertura da sessão de votação
+ * */
 @ApplicationScoped
 public class SessaoVotacaoService {
 
@@ -25,6 +27,11 @@ public class SessaoVotacaoService {
         aguardarEncerramento(tempoValidadeSessao,sessaoVotacao);
     }
 
+    /**
+     *
+     * @param pauta recebe uma pauta para a abertura da sessao
+     * @return retorna a sessão aberta
+     */
     private SessaoVotacao abrirSessao(Pauta pauta) {
         SessaoVotacao sessaoVotacao = new SessaoVotacao();
         sessaoVotacao.setPauta(pauta);
@@ -33,6 +40,11 @@ public class SessaoVotacaoService {
         return sessaoVotacao;
     }
 
+    /**
+     *
+      * @param tempoEmMilissegundos recebe o tempo em milissegundos para o encerramento da sessão, 60000ms default
+     * @param sessaoVotacao recebe a sessão aberta para o encerramento
+     */
     @Transactional
     private void aguardarEncerramento(Long tempoEmMilissegundos, SessaoVotacao sessaoVotacao) {
         if (tempoEmMilissegundos == null || tempoEmMilissegundos == 0L) {
@@ -94,6 +106,10 @@ class TimerRunner extends Thread {
         }
     }
 
+    /**
+     *
+     * @param sessaoVotacao recebe uma sessão aberta para encerramento e contabilização dos votos
+     */
     private void fecharSessao(SessaoVotacao sessaoVotacao) {
         try {
             userTransaction.begin();

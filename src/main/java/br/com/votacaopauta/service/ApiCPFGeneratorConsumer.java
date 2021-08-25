@@ -12,9 +12,18 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+/**
+ * @author Cristian
+ * @apiNote usa os recursos do Java 11 para consumo de API, devido a dificuldade de enviar um token de autenticação
+ * via application.properties.
+ * */
 @RequestScoped
 public class ApiCPFGeneratorConsumer {
 
+    /**
+     *
+     * @return retorna o objeto CPFGeradoDTO do Json retornado no getCPFFromAPI()
+     */
     public CPFGeradoDTO getCPF() {
         try {
             return new ObjectMapper().readValue(getCPFFromAPI(), CPFGeradoDTO.class);
@@ -24,6 +33,10 @@ public class ApiCPFGeneratorConsumer {
         return null;
     }
 
+    /**
+     *
+     * @return retorna o json do cpf gerado pela API Gerador App
+     */
     private String getCPFFromAPI() {
         String retorno = "";
         try {
