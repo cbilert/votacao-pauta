@@ -1,5 +1,8 @@
 # votacao-pauta Project
 
+### Este projeto foi desenvolvido como um exercício de de desenvolvimento de API e consumo de APIs externas.
+### Fiz o deploy deste projeto no HEROKU 
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
