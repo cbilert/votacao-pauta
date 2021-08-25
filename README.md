@@ -1,8 +1,30 @@
 # votacao-pauta Project
 
-### Este projeto foi desenvolvido como um exercício de de desenvolvimento de API e consumo de APIs externas.
-### Fiz o deploy deste projeto no HEROKU 
+### Este projeto foi desenvolvido como um exercício de desenvolvimento de API e consumo de APIs externas.
+### Fiz o deploy deste projeto no HEROKU https://votacao-pauta.herokuapp.com/
 
+## Funcionalidades
+- Cadastrar uma nova pauta;
+- Abrir uma sessão de votação em uma pauta (a sessão de votação deve ficar aberta por um
+tempo determinado na chamada de abertura ou 1 minuto por default);
+- Receber votos dos associados em pautas (os votos são apenas 'Sim'/'Não'. Cada associado
+é identificado por um id único e pode votar apenas uma vez por pauta);
+- Contabilizar os votos e dar o resultado da votação na pauta;
+
+***
+##Integrações
+- Integra com um sistema que verifica, a partir do CPF do associado, se ele pode
+votar;
+- Integra com sistema que gera o CPF aleatoriamente e com validade;
+
+***
+## TODO
+ - Integração com mensageria e filas
+ - Teste de performance
+ - Versionamento
+ - Implementar Testes unitários.
+***
+***
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
