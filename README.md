@@ -12,7 +12,7 @@ tempo determinado na chamada de abertura ou 1 minuto por default);
 - Contabilizar os votos e dar o resultado da votação na pauta;
 
 ***
-##Integrações
+## Integrações
 - Integra com um sistema que verifica, a partir do CPF do associado, se ele pode
 votar;
 - Integra com sistema que gera o CPF aleatoriamente e com validade;
