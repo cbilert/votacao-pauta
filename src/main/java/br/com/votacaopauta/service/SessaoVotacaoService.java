@@ -3,6 +3,7 @@ package br.com.votacaopauta.service;
 import br.com.votacaopauta.entity.Pauta;
 import br.com.votacaopauta.entity.SessaoVotacao;
 import br.com.votacaopauta.repository.SessaoVotacaoRepository;
+import br.com.votacaopauta.repository.VotoRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class SessaoVotacaoService {
 
     @Inject    SessaoVotacaoRepository sessaoVotacaoRepository;
+    @Inject    VotoRepository votoRepository;
     @Inject    UserTransaction userTransaction;
 
     public void init(Pauta pauta, Long tempoValidadeSessao) {
@@ -37,7 +39,7 @@ public class SessaoVotacaoService {
             tempoEmMilissegundos = 60000L; //1 minuto por default
         }
         Timer timer = new Timer(tempoEmMilissegundos);
-        TimerRunner timerRunner = new TimerRunner(timer, userTransaction, sessaoVotacaoRepository,sessaoVotacao);
+        TimerRunner timerRunner = new TimerRunner(timer, userTransaction, sessaoVotacaoRepository,sessaoVotacao, votoRepository);
         timerRunner.start();
     }
 }
@@ -64,12 +66,14 @@ class TimerRunner extends Thread {
     Thread thread;
     SessaoVotacaoRepository sessaoVotacaoRepository;
     SessaoVotacao sessaoVotacao;
+    VotoRepository votoRepository;
     UserTransaction userTransaction;
-    public TimerRunner(Thread thread, UserTransaction userTransaction, SessaoVotacaoRepository sessaoVotacaoRepository, SessaoVotacao sessaoVotacao) {
+    public TimerRunner(Thread thread, UserTransaction userTransaction, SessaoVotacaoRepository sessaoVotacaoRepository, SessaoVotacao sessaoVotacao, VotoRepository votoRepository) {
         this.thread = thread;
         this.sessaoVotacaoRepository = sessaoVotacaoRepository;
         this.sessaoVotacao = sessaoVotacao;
         this.userTransaction = userTransaction;
+        this.votoRepository = votoRepository;
         this.thread.start();
     }
 
@@ -95,6 +99,8 @@ class TimerRunner extends Thread {
             userTransaction.begin();
             sessaoVotacao = sessaoVotacaoRepository.findById(sessaoVotacao.getId());
             sessaoVotacao.setEncerramento(LocalDateTime.now());
+            sessaoVotacao.setVotosSim(votoRepository.countVotosPositivos(sessaoVotacao.getPauta().getId()));
+            sessaoVotacao.setVotosNao(votoRepository.countVotosNegativos(sessaoVotacao.getPauta().getId()));
             sessaoVotacaoRepository.persist(sessaoVotacao);
             userTransaction.commit();
         }catch (Exception e) {

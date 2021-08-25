@@ -31,6 +31,12 @@ public class SessaoVotacao implements Serializable {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime encerramento;
 
+    @Column(name = "votosSim")
+    private Long votosSim;
+
+    @Column(name = "votosNao")
+    private Long votosNao;
+
     public Pauta getPauta() {
         return pauta;
     }
@@ -61,5 +67,27 @@ public class SessaoVotacao implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVotosSim() {
+        if (votosSim == null) votosSim = 0L;
+        return votosSim;
+    }
+
+    public void setVotosSim(Long votosSim) {
+        this.votosSim = votosSim;
+    }
+
+    public Long getVotosNao() {
+        if (votosNao ==null) votosNao = 0L;
+        return votosNao;
+    }
+
+    public void setVotosNao(Long votosNao) {
+        this.votosNao = votosNao;
+    }
+
+    public Long getTotalVotos() {
+        return getVotosSim() + getVotosNao();
     }
 }

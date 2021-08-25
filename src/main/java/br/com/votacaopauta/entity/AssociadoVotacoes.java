@@ -4,8 +4,10 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 @Entity
-public class AssociadoVotacoes extends PanacheEntityBase {
+public class AssociadoVotacoes implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
